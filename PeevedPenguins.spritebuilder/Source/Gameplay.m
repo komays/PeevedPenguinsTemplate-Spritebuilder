@@ -11,12 +11,15 @@
 @implementation Gameplay {
     CCPhysicsNode *_physicsNode;
     CCNode *_catapultArm;
+    CCNode *_levelNode;
 }
 
 //called whne CCB file has completed loading
 - (void)didLoadFromCCB {
     self.userInteractionEnabled = TRUE;
     //tell this scene to accept touches
+    CCScene *level = [CCBReader loadAsScene:@"Levels/Level1"];
+    [_levelNode addChild:level];
 }
 
 //called on every touch in this scene
@@ -37,6 +40,10 @@
     CGPoint launchDirection = ccp(1, 0);
     CGPoint force = ccpMult(launchDirection, 8000);
     [penguin.physicsBody applyForce:force];
+    
+    //ensure followed object is in visiable area when starting
+    self.position = ccp(0, 0);
+    CCActionFollow *follow = [CCActionFollow actionWithTarget:penguin worldBoundary:self.boundingBox];
 }
 
 
